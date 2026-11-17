@@ -1,0 +1,16 @@
+﻿<Application x:Class="DesktopPet.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnExplicitShutdown">
+    <!-- OnExplicitShutdown：把宠物藏起来时进程不退出，只有托盘"退出"才真的关 -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 看板的配色与控件样式，全部来自 index.html 的那套 CSS 变量 -->
+                <ResourceDictionary Source="Ui/BrainTheme.xaml"/>
+                <!-- AI 解读报告的排版样式 -->
+                <ResourceDictionary Source="Ui/ReportStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

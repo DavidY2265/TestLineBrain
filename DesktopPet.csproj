@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8F3A1C22-5B4E-4D19-9A6C-7E2D0B41F9A3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DesktopPet</RootNamespace>
+    <AssemblyName>DesktopPet</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <!-- VS 2019 (16.11) 的 Roslyn 最高支持 C# 9 -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <!-- 调 Claude API 用。两个都是 .NET Framework 自带的程序集，不是 NuGet 包 -->
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Microsoft.CSharp" />
+
+    <!-- ============ MySqlConnector（唯一的第三方依赖）============
+         报警和螺丝锁附直连本机 MySQL 用。装的是 MySqlConnector 2.6.2，
+         它在 .NET Framework 4.8 上会带进 10 个依赖 dll，下面这一串全是它拖来的。
+
+         **发布时这 11 个 dll 必须和 exe 一起拷走，少一个就是启动即崩。**
+         所以「产物就一个 exe」那句话不成立了，要拷整个 bin\Release 文件夹。 -->
+    <Reference Include="MySqlConnector">
+      <HintPath>packages\MySqlConnector.2.6.2\lib\net48\MySqlConnector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode">
+      <HintPath>packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.2\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.8.0.2\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+
+    <!-- WPF -->
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\BrainTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\ReportStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\BrainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\ReportWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\ChatPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\EquipmentPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\QualityPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\DbSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Ui\TestPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.Alerts.cs" />
+    <Compile Include="MainWindow.Bubble.cs" />
+    <Compile Include="MainWindow.Input.cs" />
+    <Compile Include="MainWindow.Board.cs" />
+    <Compile Include="MainWindow.Tray.cs" />
+    <Compile Include="Ui\BrainWindow.xaml.cs">
+      <DependentUpon>BrainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\ReportWindow.xaml.cs">
+      <DependentUpon>ReportWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\ChatPanel.xaml.cs">
+      <DependentUpon>ChatPanel.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\EquipmentPane.xaml.cs">
+      <DependentUpon>EquipmentPane.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\QualityPane.xaml.cs">
+      <DependentUpon>QualityPane.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\DbSettingsWindow.xaml.cs">
+      <DependentUpon>DbSettingsWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ui\TestPane.xaml.cs">
+      <DependentUpon>TestPane.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <!-- ============ LineBrain：逻辑层 ============
+         按看板的三栏分文件夹。一个 cs 一个功能类，调用关系是一条直线：
+             Shared\ShiftData 跑一遍 → 装好 → 发给三个界面
+         没有全局静态状态，刷新就是重新 Load() 换一个新对象。 -->
+
+    <!-- Shared\　三栏都要用的底座：配置、csv、凭据、数据类型、Cpk、本班数据、警告扫描 -->
+    <Compile Include="LineBrain\Shared\AlertScanner.cs" />
+    <Compile Include="LineBrain\Shared\BrainConfig.cs" />
+    <Compile Include="LineBrain\Shared\CpkCalculator.cs" />
+    <Compile Include="LineBrain\Shared\CredentialStore.cs" />
+    <Compile Include="LineBrain\Shared\CsvHelper.cs" />
+    <Compile Include="LineBrain\Shared\DataProblems.cs" />
+    <Compile Include="LineBrain\Shared\MySqlAccess.cs" />
+    <Compile Include="LineBrain\Shared\ReportTypes.cs" />
+    <Compile Include="LineBrain\Shared\ShiftData.cs" />
+
+    <!-- Alarm\　报警栏：查库 + 聚类并集算 MA -->
+    <Compile Include="LineBrain\Alarm\AlarmAnalyzer.cs" />
+    <Compile Include="LineBrain\Alarm\AlarmDatabase.cs" />
+    <Compile Include="LineBrain\Alarm\AlarmReport.cs" />
+
+    <!-- Fasten\　螺丝锁附栏：查库 + 归组（表还没有，现在是桩） -->
+    <Compile Include="LineBrain\Fasten\FastenAnalyzer.cs" />
+    <Compile Include="LineBrain\Fasten\FastenDatabase.cs" />
+    <Compile Include="LineBrain\Fasten\FastenReport.cs" />
+
+    <!-- Test\　测试栏：读 UTS log + 判读提取 + 报告正文 -->
+    <Compile Include="LineBrain\Test\TestLogExtract.cs" />
+    <Compile Include="LineBrain\Test\TestLogReader.cs" />
+    <Compile Include="LineBrain\Test\TestReport.cs" />
+
+    <!-- Ai\　大模型接入：凭据、HTTP、发给模型的事实清单 -->
+    <Compile Include="LineBrain\Ai\AiAccess.cs" />
+    <Compile Include="LineBrain\Ai\ClaudeClient.cs" />
+    <Compile Include="LineBrain\Ai\FactSheet.cs" />
+    <Compile Include="LineBrain\Ai\NativeCredentialManager.cs" />
+
+    <!-- ============ Ui：界面辅助（自绘控件与建表工具）============ -->
+    <Compile Include="Ui\TableKit.cs" />
+    <Compile Include="Ui\BrainBrushes.cs" />
+    <Compile Include="Ui\Sparkline.cs" />
+    <Compile Include="Ui\TimelineBar.cs" />
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="StartupManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

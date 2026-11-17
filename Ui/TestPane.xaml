@@ -1,0 +1,144 @@
+<UserControl x:Class="DesktopPet.Ui.TestPane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Grid 不是 StackPanel：KPI 条按内容高，两张卡片按 2 : 3 分掉剩下的高度。
+        测站多一个、测项多两行，卡片都还在原地，只是各自里面滚。
+
+        这一栏原来所有的数都写死在 Text= 里。现在搬进
+        %APPDATA%\DesktopPet\data\ 下的 test_station.csv / test_item.csv / test_meta.csv，
+        良率、Cpk、漂移比、状态全部在后台代码里现算。
+    -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"  MinHeight="150"/>
+            <RowDefinition Height="3*"  MinHeight="180"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================================================= 六个 KPI -->
+        <Border Grid.Row="0" Style="{StaticResource KpiStrip}" Margin="0,0,0,14">
+            <UniformGrid Columns="6">
+
+                <Border Style="{StaticResource KpiCellFirst}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="整线测试良率"/>
+                        <TextBlock x:Name="KpiYield" Style="{StaticResource KpiValueCrit}">
+                            <Run x:Name="KpiYieldRun" Text="—"/><Run Style="{StaticResource KpiUnit}" Text="%"/>
+                        </TextBlock>
+                        <TextBlock x:Name="KpiYieldDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="本班 NG"/>
+                        <TextBlock Style="{StaticResource KpiValue}">
+                            <Run x:Name="KpiNgRun" Text="—"/><Run Style="{StaticResource KpiUnit}" Text=" 笔"/>
+                        </TextBlock>
+                        <TextBlock x:Name="KpiNgDesc" Style="{StaticResource KpiDesc}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="最差测站"/>
+                        <TextBlock x:Name="KpiWorst" Style="{StaticResource KpiValueCrit}" Text="—"/>
+                        <TextBlock x:Name="KpiWorstDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="可算 Cpk 测项"/>
+                        <TextBlock Style="{StaticResource KpiValue}">
+                            <Run x:Name="KpiCalcRun" Text="—"/><Run x:Name="KpiCalcTotalRun"
+                                 Style="{StaticResource KpiUnit}" Text=" / —"/>
+                        </TextBlock>
+                        <TextBlock x:Name="KpiCalcDesc" Style="{StaticResource KpiDesc}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock x:Name="KpiBelowKey" Style="{StaticResource KpiKey}" Text="—"/>
+                        <TextBlock x:Name="KpiBelow" Style="{StaticResource KpiValueWarn}" Text="—"/>
+                        <TextBlock x:Name="KpiBelowDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="检出漂移"/>
+                        <TextBlock x:Name="KpiDrift" Style="{StaticResource KpiValueWarn}" Text="—"/>
+                        <TextBlock x:Name="KpiDriftDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+            </UniformGrid>
+        </Border>
+
+        <!-- ================================================= 各测站良率 -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="StationTitle" Grid.Column="0"
+                               Style="{StaticResource CardTitle}" Text="—"/>
+
+                    <TextBlock x:Name="StationSub" Grid.Column="1" Style="{StaticResource CardSub}"
+                               HorizontalAlignment="Right" Margin="12,0,0,0" Text="—"/>
+                </Grid>
+
+                <!-- 横向不给滚动条：给了 ScrollViewer 就按无限宽去量内容，* 列会缩到最小宽 -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <Grid x:Name="StationGrid"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- ================================================= 全测项分析 -->
+        <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{StaticResource CardTitle}">
+                        <Run Text="全测项分析　"/><Run Text="良率 · 能力 · 漂移" Foreground="{StaticResource MidBrush}"/>
+                    </TextBlock>
+
+                    <TextBlock x:Name="ItemSub" Grid.Column="1" Style="{StaticResource CardSub}"
+                               HorizontalAlignment="Right" Margin="12,0,12,0" Text="—"/>
+
+                    <Button Grid.Column="2" Content="AI 解读" VerticalAlignment="Center"
+                            Style="{StaticResource AiButton}" Click="OnAiClick"/>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <Grid x:Name="ItemGrid"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

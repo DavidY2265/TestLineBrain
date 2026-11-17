@@ -1,0 +1,2 @@
+https://logiq-service.logitech.io/anthropic
+eyJpZCI6ICIwYjExYjRiMS0yMmFjLTQwNzUtYjQzYy1iODE0MGZlYWYzNzgiLCAia2V5IjogIjR6WlBjNDQ5TkFYbE5pbzlBdmxhS0EiLCAiZXhwaXJlc19hdCI6IDE4MDQ1ODExMDAuNTA5NDAyfQ

@@ -1,0 +1,501 @@
+<!--
+    Line Brain 看板的配色和控件样式。
+
+    这一份是从 E:\Project\AI 应用\LineBrain_UI\index.html 的 CSS 变量原样翻过来的，
+    颜色值一个都没改。HTML 那边叫 ink 变量，这边就叫 InkBrush，对着看能一一对上。
+
+    字体用 "Segoe UI, Microsoft YaHei UI" 这个顺序：数字和英文走 Segoe UI（它的
+    数字天生等宽，正好顶替 CSS 的 font-variant-numeric:tabular-nums），中文自动回退
+    到雅黑。所以表格里的数字列不需要再单独换字体。
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================================================ 颜色 -->
+
+    <!-- 文字：从最深到最浅 -->
+    <SolidColorBrush x:Key="InkBrush"    Color="#14161A"/>
+    <SolidColorBrush x:Key="BodyBrush"   Color="#3F454D"/>
+    <SolidColorBrush x:Key="MidBrush"    Color="#6B7280"/>
+    <SolidColorBrush x:Key="SoftBrush"   Color="#9AA0A6"/>
+    <SolidColorBrush x:Key="FaintBrush"  Color="#B9BEC4"/>
+
+    <!-- 线和底 -->
+    <SolidColorBrush x:Key="HairBrush"   Color="#E4E7EA"/>
+    <SolidColorBrush x:Key="Hair2Brush"  Color="#EFF1F3"/>
+    <SolidColorBrush x:Key="DarkBrush"   Color="#17191C"/>
+    <SolidColorBrush x:Key="PanelBrush"  Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Panel2Brush" Color="#FAFBFC"/>
+
+    <!-- 告警语义色。整套界面只有这三个颜色有含义，别处一律中性灰 -->
+    <SolidColorBrush x:Key="OkBrush"     Color="#2E7D5B"/>
+    <SolidColorBrush x:Key="WarnBrush"   Color="#B07211"/>
+    <SolidColorBrush x:Key="CritBrush"   Color="#B3382C"/>
+    <SolidColorBrush x:Key="OkBgBrush"   Color="#EAF3EE"/>
+    <SolidColorBrush x:Key="WarnBgBrush" Color="#FBF3E6"/>
+    <SolidColorBrush x:Key="CritBgBrush" Color="#FBECEA"/>
+
+    <!-- 时序图上「数据缺失」那条灰带 -->
+    <SolidColorBrush x:Key="NoDataBrush" Color="#D7DBDF"/>
+
+    <FontFamily x:Key="UiFont">Segoe UI, Microsoft YaHei UI</FontFamily>
+
+    <!-- ============================================================ 卡片 -->
+
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background"      Value="{StaticResource PanelBrush}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource HairBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius"    Value="10"/>
+        <Setter Property="Padding"         Value="16,15,16,15"/>
+    </Style>
+
+    <!-- 卡片标题那一行：标题靠左，副标题靠右 -->
+    <Style x:Key="CardTitle" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="13"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CardSub" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource SoftBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+    </Style>
+
+    <!-- ============================================================ KPI 条 -->
+
+    <!-- 六格是一个整体，不是六张卡片：一条外框，中间用细线隔开 -->
+    <Style x:Key="KpiStrip" TargetType="Border">
+        <Setter Property="Background"      Value="{StaticResource PanelBrush}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource HairBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius"    Value="10"/>
+    </Style>
+
+    <Style x:Key="KpiCell" TargetType="Border">
+        <Setter Property="Padding"         Value="15,13,15,14"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Hair2Brush}"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+    </Style>
+
+    <Style x:Key="KpiCellFirst" TargetType="Border" BasedOn="{StaticResource KpiCell}">
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style x:Key="KpiKey" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource SoftBrush}"/>
+        <Setter Property="Margin"     Value="0,0,0,5"/>
+    </Style>
+
+    <Style x:Key="KpiValue" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+        <Setter Property="LineHeight" Value="27"/>
+    </Style>
+
+    <Style x:Key="KpiValueWarn" TargetType="TextBlock" BasedOn="{StaticResource KpiValue}">
+        <Setter Property="Foreground" Value="{StaticResource WarnBrush}"/>
+    </Style>
+
+    <Style x:Key="KpiValueCrit" TargetType="TextBlock" BasedOn="{StaticResource KpiValue}">
+        <Setter Property="Foreground" Value="{StaticResource CritBrush}"/>
+    </Style>
+
+    <!-- KPI 数值后面那个小单位，比如「51 min」的 min -->
+    <Style x:Key="KpiUnit" TargetType="Run">
+        <Setter Property="FontSize"   Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="KpiDesc" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="10.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FaintBrush}"/>
+        <Setter Property="Margin"     Value="0,4,0,0"/>
+    </Style>
+
+    <!-- 告警态的 KPI，说明文字要跟着提亮一档，否则看不清 -->
+    <Style x:Key="KpiDescAlert" TargetType="TextBlock" BasedOn="{StaticResource KpiDesc}">
+        <Setter Property="Foreground" Value="{StaticResource MidBrush}"/>
+    </Style>
+
+    <!-- ============================================================ 表格 -->
+
+    <!-- 表头单元格 -->
+    <Style x:Key="Th" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="10.5"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource SoftBrush}"/>
+        <Setter Property="Margin"     Value="0,0,0,7"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <Style x:Key="ThRight" TargetType="TextBlock" BasedOn="{StaticResource Th}">
+        <Setter Property="TextAlignment" Value="Right"/>
+    </Style>
+
+    <!-- 普通单元格 -->
+    <Style x:Key="Td" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource BodyBrush}"/>
+        <Setter Property="Margin"     Value="0,8,0,8"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="TdRight" TargetType="TextBlock" BasedOn="{StaticResource Td}">
+        <Setter Property="TextAlignment" Value="Right"/>
+    </Style>
+
+    <!-- 行内的主名称，比如测项名、孔位名 -->
+    <Style x:Key="TdName" TargetType="TextBlock" BasedOn="{StaticResource Td}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+    </Style>
+
+    <!-- 次要信息，比如单位、括号里的补充 -->
+    <Style x:Key="TdSmall" TargetType="TextBlock" BasedOn="{StaticResource Td}">
+        <Setter Property="FontSize"   Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource SoftBrush}"/>
+    </Style>
+
+    <Style x:Key="TdSmallRight" TargetType="TextBlock" BasedOn="{StaticResource TdSmall}">
+        <Setter Property="TextAlignment" Value="Right"/>
+    </Style>
+
+    <!-- 行分隔线。HTML 里是 td 的 border-bottom，这边单独画一条 -->
+    <Style x:Key="RowLine" TargetType="Border">
+        <Setter Property="Height"     Value="1"/>
+        <Setter Property="Background" Value="{StaticResource Hair2Brush}"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <!-- 表头下面那条，比行线深一点 -->
+    <Style x:Key="HeadLine" TargetType="Border">
+        <Setter Property="Height"     Value="1"/>
+        <Setter Property="Background" Value="{StaticResource HairBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <!-- 合计行上面那条粗线 -->
+    <Style x:Key="TotalLine" TargetType="Border">
+        <Setter Property="Height"     Value="2"/>
+        <Setter Property="Background" Value="{StaticResource HairBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+
+    <!-- ============================================================ 徽标 -->
+
+    <!--
+        Border 本身没有 FontSize，但 TextElement.FontSize 是可继承的附加属性，
+        挂在 Border 上，里面的 TextBlock 就自动继承了，不用每个都写一遍。
+    -->
+    <Style x:Key="TagBase" TargetType="Border">
+        <Setter Property="CornerRadius"        Value="4"/>
+        <Setter Property="Padding"             Value="7,2,7,2"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment"   Value="Center"/>
+        <Setter Property="Background"          Value="{StaticResource Hair2Brush}"/>
+        <Setter Property="TextElement.FontSize"   Value="10.5"/>
+        <Setter Property="TextElement.FontWeight" Value="Bold"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource MidBrush}"/>
+    </Style>
+
+    <Style x:Key="TagOk" TargetType="Border" BasedOn="{StaticResource TagBase}">
+        <Setter Property="Background"             Value="{StaticResource OkBgBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource OkBrush}"/>
+    </Style>
+
+    <Style x:Key="TagWarn" TargetType="Border" BasedOn="{StaticResource TagBase}">
+        <Setter Property="Background"             Value="{StaticResource WarnBgBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource WarnBrush}"/>
+    </Style>
+
+    <Style x:Key="TagCrit" TargetType="Border" BasedOn="{StaticResource TagBase}">
+        <Setter Property="Background"             Value="{StaticResource CritBgBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource CritBrush}"/>
+    </Style>
+
+    <!-- 靠右对齐的徽标（状态列） -->
+    <Style x:Key="TagRightOk" TargetType="Border" BasedOn="{StaticResource TagOk}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <Style x:Key="TagRightWarn" TargetType="Border" BasedOn="{StaticResource TagWarn}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <Style x:Key="TagRightCrit" TargetType="Border" BasedOn="{StaticResource TagCrit}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <Style x:Key="TagRightPlain" TargetType="Border" BasedOn="{StaticResource TagBase}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <!-- 规格组标记，比徽标更轻，只有描边 -->
+    <Style x:Key="SideMark" TargetType="Border">
+        <Setter Property="CornerRadius"        Value="3"/>
+        <Setter Property="Padding"             Value="4,1,4,1"/>
+        <Setter Property="BorderThickness"     Value="1"/>
+        <Setter Property="BorderBrush"         Value="{StaticResource SoftBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="TextElement.FontSize"   Value="9.5"/>
+        <Setter Property="TextElement.FontWeight" Value="Bold"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource MidBrush}"/>
+    </Style>
+
+    <!-- ============================================================ 按钮 -->
+
+    <!-- 页签。用 RadioButton 是图它自带互斥，不用自己记谁选中了 -->
+    <Style x:Key="TabButton" TargetType="RadioButton">
+        <Setter Property="Cursor"     Value="Hand"/>
+        <Setter Property="FontSize"   Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource MidBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Underline"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0,0,0,2"
+                            Padding="15,13,15,11">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+                            <Setter TargetName="Underline" Property="BorderBrush"
+                                    Value="{StaticResource InkBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 页签上那个红色小数字 -->
+    <Style x:Key="TabPill" TargetType="Border">
+        <Setter Property="CornerRadius"      Value="9"/>
+        <Setter Property="MinWidth"          Value="17"/>
+        <Setter Property="Height"            Value="17"/>
+        <Setter Property="Padding"           Value="5,0,5,0"/>
+        <Setter Property="Margin"            Value="6,0,0,0"/>
+        <Setter Property="Background"        Value="{StaticResource CritBgBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextElement.FontSize"   Value="10.5"/>
+        <Setter Property="TextElement.FontWeight" Value="Bold"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource CritBrush}"/>
+    </Style>
+
+    <!-- 排序那一排小按钮，也用 RadioButton 做互斥 -->
+    <Style x:Key="SegButton" TargetType="RadioButton">
+        <Setter Property="Cursor"   Value="Hand"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bg" CornerRadius="4" Padding="9,3,9,3" Margin="3,0,0,0"
+                            Background="{StaticResource PanelBrush}"
+                            BorderBrush="{StaticResource HairBrush}" BorderThickness="1">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush"
+                                    Value="{StaticResource SoftBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bg" Property="Background"
+                                    Value="{StaticResource DarkBrush}"/>
+                            <Setter TargetName="Bg" Property="BorderBrush"
+                                    Value="{StaticResource DarkBrush}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="{StaticResource MidBrush}"/>
+    </Style>
+
+    <!-- AI 解读，整个界面唯一的实心深色按钮 -->
+    <Style x:Key="AiButton" TargetType="Button">
+        <Setter Property="Cursor"     Value="Hand"/>
+        <Setter Property="FontSize"   Value="11"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="5" Padding="12,5,12,5"
+                            Background="{StaticResource DarkBrush}"
+                            BorderBrush="{StaticResource DarkBrush}" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Opacity" Value="0.86"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ 追问对话框 -->
+    <!--
+        四个地方共用这一套：三栏的 AI 解读报告下面，和小精灵报警点开的解析下面。
+        配色还是上面那三个语义色 + 中性灰，没有新颜色。
+    -->
+
+    <!-- 用户说的话：靠右，深底白字，和 AI 那边一眼分得开 -->
+    <Style x:Key="ChatUser" TargetType="Border">
+        <Setter Property="Background"          Value="{StaticResource DarkBrush}"/>
+        <Setter Property="CornerRadius"        Value="10,10,3,10"/>
+        <Setter Property="Padding"             Value="12,8,12,8"/>
+        <Setter Property="Margin"              Value="60,5,0,5"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <!-- AI 说的话：靠左，浅底，左边压一条深线（和报告正文那条是同一个语言） -->
+    <Style x:Key="ChatAi" TargetType="Border">
+        <Setter Property="Background"          Value="#F5F7F8"/>
+        <Setter Property="BorderBrush"         Value="{StaticResource HairBrush}"/>
+        <Setter Property="BorderThickness"     Value="2,0,0,0"/>
+        <Setter Property="Padding"             Value="13,9,13,9"/>
+        <Setter Property="Margin"              Value="0,5,48,5"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <Style x:Key="ChatUserText" TargetType="TextBlock">
+        <Setter Property="FontSize"     Value="12"/>
+        <Setter Property="LineHeight"   Value="19"/>
+        <Setter Property="Foreground"   Value="#FFFFFF"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="ChatAiText" TargetType="TextBlock">
+        <Setter Property="FontSize"     Value="12"/>
+        <Setter Property="LineHeight"   Value="20"/>
+        <Setter Property="Foreground"   Value="{StaticResource BodyBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- 「正在算…」那一条，比正文淡一档 -->
+    <Style x:Key="ChatWaitText" TargetType="TextBlock" BasedOn="{StaticResource ChatAiText}">
+        <Setter Property="Foreground" Value="{StaticResource SoftBrush}"/>
+        <Setter Property="FontStyle"  Value="Italic"/>
+    </Style>
+
+    <!-- 建议问题的小胶囊。点一下直接问，省得自己想怎么措辞 -->
+    <Style x:Key="ChatChip" TargetType="Button">
+        <Setter Property="Cursor"     Value="Hand"/>
+        <Setter Property="FontSize"   Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource MidBrush}"/>
+        <Setter Property="Margin"     Value="0,0,6,6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="11" Padding="10,4,10,4"
+                            Background="{StaticResource PanelBrush}"
+                            BorderBrush="{StaticResource HairBrush}" BorderThickness="1">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush"
+                                    Value="{StaticResource SoftBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        输入框。WPF 的 TextBox 默认长得像 Win32 控件，套个模板换成和这套界面一致的细描边。
+        模板里必须有一个叫 PART_ContentHost 的 ScrollViewer，那是 TextBox 放文字的地方，
+        名字是约定死的，改了就不显示光标也打不出字。
+    -->
+    <Style x:Key="ChatInput" TargetType="TextBox">
+        <Setter Property="FontSize"             Value="12"/>
+        <Setter Property="Foreground"           Value="{StaticResource InkBrush}"/>
+        <Setter Property="CaretBrush"           Value="{StaticResource InkBrush}"/>
+        <Setter Property="AcceptsReturn"        Value="True"/>
+        <Setter Property="TextWrapping"         Value="Wrap"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Bg" CornerRadius="6" Padding="10,7,10,7"
+                            Background="{StaticResource PanelBrush}"
+                            BorderBrush="{StaticResource HairBrush}" BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush"
+                                    Value="{StaticResource DarkBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 标题栏右上角的关闭叉，和 PetPanel 那个一个画法 -->
+    <Style x:Key="CloseX" TargetType="Button">
+        <Setter Property="Width"  Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="6" Background="Transparent">
+                        <Path Data="M 0,0 L 10,10 M 10,0 L 0,10"
+                              Stroke="White" StrokeThickness="1.6"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#40FFFFFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ 时序图 -->
+    <!--
+        报警名和「8 次 · 28m」原来由时序图自己再写一遍，现在时序图并进了汇总表，
+        那些就是表里现成的列，所以只剩刻度和图例两个样式。
+    -->
+
+    <!-- 底下的时刻刻度 -->
+    <Style x:Key="TlAxis" TargetType="TextBlock">
+        <Setter Property="FontSize"   Value="9.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FaintBrush}"/>
+    </Style>
+
+    <!-- 图例的小圆点 -->
+    <Style x:Key="LegendDot" TargetType="Ellipse">
+        <Setter Property="Width"             Value="7"/>
+        <Setter Property="Height"            Value="7"/>
+        <Setter Property="Margin"            Value="0,0,6,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

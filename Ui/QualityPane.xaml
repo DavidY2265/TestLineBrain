@@ -1,0 +1,110 @@
+<UserControl x:Class="DesktopPet.Ui.QualityPane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Grid 不是 StackPanel：KPI 条按内容高，卡片吃掉剩下的全部高度。
+        这样多监一个孔位少监一个孔位，卡片还在原地，只是里面滚。
+
+        这一栏原来所有的数都写死在下面的 Text= 里。现在全部搬进
+        %APPDATA%\DesktopPet\data\quality.csv，六个 KPI 和整张表都在后台代码里
+        按那份文件算出来 —— 界面上、小精灵嘴里、AI 回答里是同一个数，不会打架。
+    -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================================================= 六个 KPI -->
+        <Border Grid.Row="0" Style="{StaticResource KpiStrip}" Margin="0,0,0,14">
+            <UniformGrid Columns="6">
+
+                <Border Style="{StaticResource KpiCellFirst}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="在监锁附孔位"/>
+                        <TextBlock x:Name="KpiHoles" Style="{StaticResource KpiValue}" Text="—"/>
+                        <TextBlock x:Name="KpiHolesDesc" Style="{StaticResource KpiDesc}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="最低能力指数"/>
+                        <TextBlock x:Name="KpiLowest" Style="{StaticResource KpiValueCrit}" Text="—"/>
+                        <TextBlock x:Name="KpiLowestDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="扭力 Cpk 最低"/>
+                        <TextBlock x:Name="KpiTorque" Style="{StaticResource KpiValueWarn}" Text="—"/>
+                        <TextBlock x:Name="KpiTorqueDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="本班锁附不良"/>
+                        <TextBlock x:Name="KpiTorqueNg" Style="{StaticResource KpiValue}" Text="—"/>
+                        <TextBlock Style="{StaticResource KpiDesc}" Text="50008 / 50018–20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="本班浮高不良"/>
+                        <TextBlock x:Name="KpiHeightNg" Style="{StaticResource KpiValue}" Text="—"/>
+                        <TextBlock Style="{StaticResource KpiDesc}" Text="50009 / 50021–23"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource KpiCell}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource KpiKey}" Text="预警窗口"/>
+                        <TextBlock Style="{StaticResource KpiValueWarn}">
+                            <Run x:Name="KpiWindowRun" Text="—"/><Run Style="{StaticResource KpiUnit}" Text=" 班"/>
+                        </TextBlock>
+                        <TextBlock x:Name="KpiWindowDesc" Style="{StaticResource KpiDescAlert}" Text="—"/>
+                    </StackPanel>
+                </Border>
+
+            </UniformGrid>
+        </Border>
+
+        <!-- ================================================= 锁附过程参数 -->
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="CardTitleText" Grid.Column="0"
+                               Style="{StaticResource CardTitle}" Text="—"/>
+
+                    <TextBlock x:Name="CardSubText" Grid.Column="1" Style="{StaticResource CardSub}"
+                               HorizontalAlignment="Right" Margin="12,0,12,0" Text="—"/>
+
+                    <Button Grid.Column="2" Content="AI 解读" VerticalAlignment="Center"
+                            Style="{StaticResource AiButton}" Click="OnAiClick"/>
+                </Grid>
+
+                <!-- 横向不给滚动条：给了 ScrollViewer 就按无限宽去量内容，那个 * 列会缩到最小宽 -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <Grid x:Name="ParamGrid"/>
+                </ScrollViewer>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>
